@@ -7,7 +7,7 @@ toolchain go1.24.2
 require (
 	github.com/hashicorp/consul/api v1.31.0
 	github.com/netcracker/qubership-core-lib-go/v3 v3.0.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.38.0
 )
 
