@@ -1,11 +1,11 @@
 module github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2
 
-go 1.23.0
+go 1.23.8
 
 toolchain go1.24.2
 
 require (
-	github.com/hashicorp/consul/api v1.31.0
+	github.com/hashicorp/consul/api v1.32.1
 	github.com/netcracker/qubership-core-lib-go/v3 v3.0.1
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.38.0
@@ -86,8 +86,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
-	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
-	golang.org/x/sync v0.3.0 // indirect
+	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
+	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
