@@ -3,7 +3,7 @@ module github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2
 go 1.25.0
 
 require (
-	github.com/hashicorp/consul/api v1.32.2
+	github.com/hashicorp/consul/api v1.32.3
 	github.com/netcracker/qubership-core-lib-go/v3 v3.1.0
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.38.0

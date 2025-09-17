@@ -109,7 +109,7 @@ func NewVersion(version string) (*Version, error) {
 				return nil, err
 			}
 		} else {
-			return nil, fmt.Errorf("invalid version format, must match the following regexp: " + versionPattern.String())
+			return nil, fmt.Errorf("invalid version format, must match the following regexp: %s", versionPattern)
 		}
 	}
 }
