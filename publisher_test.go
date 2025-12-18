@@ -111,7 +111,7 @@ func (suite *testSuite) TestJson() {
                    }
                  }`
 
-		client := consulClient(suite.T(), suite.container)
+		client := createConsulAPIClient(suite.T(), suite.container)
 		if _, err := client.KV().Put(&api.KVPair{
 			Key:   fmt.Sprintf(BgStateConsulPath, testOriginNamespace),
 			Value: []byte(fmt.Sprintf(stateJson, testOriginNamespace, testPeerNamespace)),
@@ -156,7 +156,7 @@ func (suite *testSuite) TestJsonNew() {
                    }
                  }`
 
-		client := consulClient(suite.T(), suite.container)
+		client := createConsulAPIClient(suite.T(), suite.container)
 		if _, err := client.KV().Put(&api.KVPair{
 			Key:   fmt.Sprintf(BgStateConsulPathNew, testOriginNamespace),
 			Value: []byte(fmt.Sprintf(stateJson, testOriginNamespace, testPeerNamespace)),
@@ -213,7 +213,7 @@ func (suite *testSuite) TestStateChange() {
 			testOriginNamespace: wg1,
 			testPeerNamespace:   wg2,
 		}
-		client := consulClient(suite.T(), suite.container)
+		client := createConsulAPIClient(suite.T(), suite.container)
 		saveBGState(suite.T(), client, []string{testOriginNamespace, testPeerNamespace}, state1)
 
 		for ns, wg := range tests {
@@ -300,7 +300,7 @@ func (suite *testSuite) TestStateChangeNew() {
 			testOriginNamespace: wg1,
 			testPeerNamespace:   wg2,
 		}
-		client := consulClient(suite.T(), suite.container)
+		client := createConsulAPIClient(suite.T(), suite.container)
 		saveBGStateNew(suite.T(), client, []string{testOriginNamespace, testPeerNamespace}, state1)
 
 		for ns, wg := range tests {
@@ -392,7 +392,7 @@ func (suite *testSuite) TestStateChangedToTheSameVal() {
 	})
 }
 
-func consulClient(t *testing.T, container *consulContainer) *api.Client {
+func createConsulAPIClient(t *testing.T, container *consulContainer) *api.Client {
 	cfg := api.DefaultConfig()
 	cfg.Address = container.endpoint
 	client, err := api.NewClient(cfg)
@@ -438,7 +438,7 @@ type consulContainer struct {
 }
 
 func withCleanConsul(suite *testSuite, test func()) {
-	client := consulClient(suite.T(), suite.container)
+	client := createConsulAPIClient(suite.T(), suite.container)
 	kv, err := listKeys(client, "")
 	if err != nil {
 		suite.T().Fatal(err)

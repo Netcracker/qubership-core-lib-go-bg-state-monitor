@@ -12,9 +12,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2/consul"
+	bgConsul "github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2/consul"
+	restConsul "github.com/netcracker/qubership-core-lib-go-rest-utils/v2/consul-propertysource"
 	"github.com/netcracker/qubership-core-lib-go/v3/logging"
+	"github.com/netcracker/qubership-core-lib-go/v3/configloader"
 )
+
+type consulClient interface {
+	Login() error
+	SecretId() string
+}
 
 var (
 	DefaultPollingWaitTime = 5 * time.Minute
@@ -22,6 +29,22 @@ var (
 	DefaultRetryDelay      = 10 * time.Second
 	BgStateConsulPath      = "config/%s/application/bluegreen/bgstate"
 	BgStateConsulPathNew   = "bluegreen/%s/bgstate"
+)
+
+var (
+ 	newPublisherFunc       = NewPublisher
+ 	buildTokenSupplierFunc = buildTokenSupplier
+	newRestConsulClient    = func(cfg restConsul.ClientConfig) consulClient {
+		return restConsul.NewClient(cfg)
+	}
+	getConsulTokenFunc     = func() string {
+		if koanf := configloader.GetKoanf(); koanf != nil {
+			return koanf.String("consul.token")
+		}
+		return ""
+	}
+	consulRetryCount = 20
+	consulRetryDelay = 5 * time.Second
 )
 
 var UnknownDatetime = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
@@ -44,6 +67,50 @@ var log = logging.GetLogger("bg-state-publisher")
 type ConsulBlueGreenStatePublisher struct {
 	statePointer *atomic.Pointer[BlueGreenState]
 	watcherTask  *watcherTask
+}
+
+func buildTokenSupplier(ctx context.Context, consulURL, namespace string) (func(context.Context) (string, error), error) {
+	consulToken := getConsulTokenFunc()
+	if consulToken != "" {
+		log.DebugC(ctx, "Using provided Consul token")
+		return func(context.Context) (string, error) {
+			return consulToken, nil
+		}, nil
+	}
+
+	varOcg := newRestConsulClient(restConsul.ClientConfig{
+		Address:   consulURL,
+		Namespace: namespace,
+		Ctx:       ctx,
+	})
+
+	retryCount := consulRetryCount
+	retryDelay := consulRetryDelay
+
+	var err error
+	for i := 0; i < retryCount; i++ {
+		err = varOcg.Login()
+		if err == nil {
+			log.InfoC(ctx, "Consul login successful (url=%s)", consulURL)
+			return func(context.Context) (string, error) {
+				return varOcg.SecretId(), nil
+			}, nil
+		}
+
+		log.WarnC(ctx, "Consul login failed (url=%s): %s. Retrying in %s (attempt %d/%d)",
+			consulURL, err.Error(), retryDelay, i+1, retryCount)
+		time.Sleep(retryDelay)
+	}
+
+	return nil, fmt.Errorf("failed to login to Consul (url=%s) after %d retries: %w", consulURL, retryCount, err)
+}
+
+func NewPublisherWithConfig(ctx context.Context, consulURL, namespace string) (*ConsulBlueGreenStatePublisher, error) {
+	tokenSupplier, err := buildTokenSupplierFunc(ctx, consulURL, namespace)
+	if err != nil {
+		return nil, err
+	}
+	return newPublisherFunc(ctx, consulURL, namespace, tokenSupplier)
 }
 
 func NewPublisher(ctx context.Context, consulUrl, namespace string,
@@ -269,7 +336,7 @@ func parseResponse(ctx context.Context, initiated bool, namespace string, respon
 		if err != nil {
 			return nil, fmt.Errorf("failed to read response body: %w", err)
 		}
-		var kvInfoList []consul.KVInfo
+		var kvInfoList []bgConsul.KVInfo
 		if err := json.Unmarshal(bodyBytes, &kvInfoList); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
 		}
