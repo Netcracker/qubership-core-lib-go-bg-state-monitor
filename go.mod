@@ -1,6 +1,6 @@
 module github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2
 
-go 1.26.2
+go 1.26.3
 
 require (
 	github.com/hashicorp/consul/api v1.34.2
