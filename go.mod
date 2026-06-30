@@ -4,8 +4,8 @@ go 1.26.4
 
 require (
 	github.com/hashicorp/consul/api v1.34.3
-	github.com/netcracker/qubership-core-lib-go-rest-utils/v2 v2.7.1
-	github.com/netcracker/qubership-core-lib-go/v3 v3.11.2
+	github.com/netcracker/qubership-core-lib-go-rest-utils/v2 v2.7.2
+	github.com/netcracker/qubership-core-lib-go/v3 v3.12.0
 	github.com/stretchr/testify v1.11.1
 	github.com/testcontainers/testcontainers-go v0.42.0
 )
