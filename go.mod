@@ -1,9 +1,9 @@
 module github.com/netcracker/qubership-core-lib-go-bg-state-monitor/v2
 
-go 1.26.5
+go 1.26.7
 
 require (
-	github.com/hashicorp/consul/api v1.34.4
+	github.com/hashicorp/consul/api v1.34.5
 	github.com/netcracker/qubership-core-lib-go-rest-utils/v2 v2.8.0
 	github.com/netcracker/qubership-core-lib-go/v3 v3.14.0
 	github.com/stretchr/testify v1.12.1
@@ -84,7 +84,7 @@ require (
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/crypto v0.56.0 // indirect
 	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
-	golang.org/x/sync v0.21.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
