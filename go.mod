@@ -4,8 +4,8 @@ go 1.26.9
 
 require (
 	github.com/hashicorp/consul/api v1.35.0
-	github.com/netcracker/qubership-core-lib-go-rest-utils/v2 v2.10.1
-	github.com/netcracker/qubership-core-lib-go/v3 v3.15.2
+	github.com/netcracker/qubership-core-lib-go-rest-utils/v2 v2.11.0
+	github.com/netcracker/qubership-core-lib-go/v3 v3.15.3
 	github.com/stretchr/testify v1.12.1
 	github.com/testcontainers/testcontainers-go v0.44.0
 )
@@ -50,7 +50,7 @@ require (
 	github.com/knadh/koanf/parsers/yaml v1.1.1 // indirect
 	github.com/knadh/koanf/providers/env/v2 v2.0.2 // indirect
 	github.com/knadh/koanf/providers/file v1.2.1 // indirect
-	github.com/knadh/koanf/v2 v2.3.8 // indirect
+	github.com/knadh/koanf/v2 v2.4.1 // indirect
 	github.com/lufia/plan9stats v0.0.0-20260330125221-c963978e514e // indirect
 	github.com/magiconair/properties v1.8.10 // indirect
 	github.com/mattn/go-colorable v0.1.15 // indirect
